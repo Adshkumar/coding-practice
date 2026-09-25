@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nekku Navbar</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    #navbar {
+      width: 100%;
+      height: 80px;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 50px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    /* Left: Logo + Brand */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px; /* small gap between logo and text */
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .logo h2 {
+      font-size: 28px;
+      font-weight: 600;
+      color: #000;
+    }
+
+    /* Center: Menu */
+    .menu {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      font-size: 16px;
+      color: #000;
+      font-weight: 500;
+    }
+
+    .menu a.active {
+      color: orange;
+      font-weight: 600;
+      position: relative;
+    }
+
+    .menu a.active::before {
+      content: "•";
+      color: orange;
+      position: absolute;
+      left: -15px;
+    }
+
+    /* Right: Sign in + Cart */
+    .right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .right a {
+      text-decoration: none;
+      font-size: 16px;
+      color: #000;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .cart-btn {
+      background-color: yellowgreen;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Product section */
+    .product-section {
+      position: relative;
+      width: 100%;
+      height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #img {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #img img {
+      max-width: 90%;
+      height: auto;
+      max-height: 90%;
+      object-fit: contain;
+    }
+
+    #para {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: 100%;
+    }
+
+    #para h1 {
+      font-size: 110px;
+      font-weight: bold;
+      line-height: 0.9;
+      letter-spacing: 2px;
+      color: #333;
+      /* margin: 0; */
+      padding-right: 94vh;
+    }
+
+    .tagline {
+      position: absolute;
+      bottom: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      font-size: 18px;
+      font-weight: 500;
+      color: #555;
+      letter-spacing: 1px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      #navbar {
+        padding: 0 20px;
+      }
+      
+      .menu {
+        gap: 15px;
+      }
+      
+      .menu a {
+        font-size: 14px;
+      }
+      
+      #para h1 {
+        font-size: 60px;
+      }
+      
+      .tagline {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #para h1 {
+        font-size: 40px;
+      }
+      
+      .tagline {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar">
+    <!-- Left -->
+    <div class="logo">
+      <img src="https://yt3.googleusercontent.com/ytc/AIdro_m_GVGVk0jGuVTITRs0h66-uGr2inLmv8fVcfUf6G_zJ68=s900-c-k-c0x00ffffff-no-rj" alt="logo">
+      <h2>Nekku</h2>
+    </div>
+
+    <!-- Center -->
+    <div class="menu">
+      <a href="#" class="active">Home</a>
+      <a href="#">Products</a>
+      <a href="#">Shop</a>
+      <a href="#">Testimonials</a>
+      <a href="#">Blog</a>
+    </div>
+
+    <!-- Right -->
+    <div class="right">
+      <a href="#"><i class="ri-login-box-line"></i> Sign in</a>
+      <a href="#" class="cart-btn"><i class="ri-shopping-cart-2-line"></i> Cart</a>
+    </div>
+  </div>
+
+  <!-- Product section -->
+  <div class="product-section">
+    <div id="img">
+      <img src="https://www.runningxpert.com/media/catalog/product/cache/e1bfa30f5f000aa573b2ee969a7a0fde/a/_/a__0005s_0004_2019q3_essential_line_kanetyk_suede_w13_unisex_off_white-1a.jpg">
+    </div>
+    <div id="para">
+      <h1>Kalcer</h1>
+      <h1>Sneakers</h1>
+    </div>
+    <div class="tagline">
+      When Run Beyond Limits
+    </div>
+  </div>
+</body>
+</html>

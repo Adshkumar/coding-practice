@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chat</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .chat-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        #message-field {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        #message-send-btn {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        #messagecontainer {
+            list-style: none;
+            padding: 0;
+            border: 1px solid #ddd;
+            min-height: 300px;
+        }
+
+        #messagecontainer li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .status {
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>WebSocket Chat App</h1>
+
+    <div class="status" id="status">
+        Connecting...
+    </div>
+
+    <div class="chat-box">
+        <input
+            type="text"
+            id="message-field"
+            placeholder="Enter your message"
+        />
+
+        <button id="message-send-btn">
+            Send
+        </button>
+    </div>
+
+    <ul id="messagecontainer"></ul>
+
+    <script>
+        const messageInput = document.getElementById('message-field');
+        const messageBtn = document.getElementById('message-send-btn');
+        const messageContainer = document.getElementById('messagecontainer');
+        const status = document.getElementById('status');
+
+        const { port } = window.location;
+        const socket = new WebSocket(`ws://localhost:${port}`);
+
+        socket.onopen = () => {
+            console.log('Connected to WebSocket');
+            status.innerText = '✅ Connected';
+        };
+
+        socket.onmessage = (event) => {
+            const li = document.createElement('li');
+            li.innerText = event.data;
+            messageContainer.appendChild(li);
+        };
+
+        socket.onerror = (error) => {
+            console.error('WebSocket Error:', error);
+            status.innerText = '❌ Connection Error';
+        };
+
+        socket.onclose = () => {
+            console.log('Connection Closed');
+            status.innerText = '🔴 Disconnected';
+        };
+
+        messageBtn.addEventListener('click', () => {
+            const message = messageInput.value.trim();
+
+            if (!message) return;
+            socket.send(message);
+            messageInput.value = '';
+        });
+
+        messageInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                messageBtn.click();
+            }
+        });
+    </script>
+
+</body>
+</html>

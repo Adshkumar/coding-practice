@@ -1,0 +1,200 @@
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spin Wheel App</title>
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Stylesheet -->
+    <!-- <link rel="stylesheet" href="style.css" /> -->
+  </head>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+    body {
+      height: 100vh;
+      background: linear-gradient(135deg, #c3a3f1, #6414e9);
+    }
+    .wrapper {
+      width: 90%;
+      max-width: 34.37em;
+      max-height: 90vh;
+      background-color: #ffffff;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      top: 50%;
+      left: 50%;
+      padding: 3em;
+      border-radius: 1em;
+      box-shadow: 0 4em 5em rgba(27, 8, 53, 0.2);
+    }
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    #wheel {
+      max-height: inherit;
+      width: inherit;
+      top: 0;
+      padding: 0;
+    }
+    @keyframes rotate {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    #spin-btn {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      top: 50%;
+      left: 50%;
+      height: 26%;
+      width: 26%;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 0;
+      background: radial-gradient(#fdcf3b 50%, #d88a40 85%);
+      color: #c66e16;
+      text-transform: uppercase;
+      font-size: 1.8em;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+    }
+    img {
+      position: absolute;
+      width: 4em;
+      top: 45%;
+      right: -8%;
+    }
+    #final-value {
+      font-size: 1.5em;
+      text-align: center;
+      margin-top: 1.5em;
+      color: #202020;
+      font-weight: 500;
+    }
+    @media screen and (max-width: 768px) {
+      .wrapper {
+        font-size: 12px;
+      }
+      img {
+        right: -5%;
+      }
+    }
+  </style>
+  <body>
+    <div class="wrapper">
+      <div class="container">
+        <canvas id="wheel"></canvas>
+        <button id="spin-btn">Spin</button>
+
+        <img
+          src="https://cutewallpaper.org/24/yellow-arrow-png/155564497.jpg"
+          alt="spinner arrow"
+        />
+      </div>
+      <div id="final-value">
+        <p>Click On The Spin Button To Start</p>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.1.0/chartjs-plugin-datalabels.min.js"></script>
+    <!-- <script src="spin.js"></script> -->
+  </body>
+  <script>
+    const wheel = document.getElementById("wheel");
+    const spinbtn = document.getElementById("spin-btn");
+    const final = document.getElementById("final-value");
+
+    const options = [
+      "₹100",
+      "₹50",
+      "Try Again",
+      "₹200",
+      "Better Luck Next Time",
+      "₹500",
+    ];
+
+    const slice = 360 / options.length;
+
+    const rotationvalue = options.map((_, i) => {
+      return {
+        minDegree: i * slice,
+        maxDegree: (i + 1) * slice - 1,
+        value: i + 1,
+      };
+    });
+
+    var colors = [
+      "#8b35bc",
+      "#b163da",
+      "#8b35bc",
+      "#b163da",
+      "#8b35bc",
+      "#b163da",
+    ];
+
+    let currentRotation = 0;
+    
+    let myChart = new Chart(wheel, {
+      plugins: [ChartDataLabels],
+      type: "pie",
+      data: {
+        labels: options,
+        datasets: [
+          {
+            backgroundColor: colors,
+            data: Array(options.length).fill(1),
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        animation: { duration: 0 },
+        plugins: {
+          tooltip: false,
+          legend: { display: false },
+          datalabels: {
+            color: "#ffffff",
+            font: { size: 14 },
+            formatter: (_, context) =>
+              context.chart.data.labels[context.dataIndex],
+          },
+        },
+      },
+    });
+
+    function spinWheel() {
+      spinBtn.disabled = true;
+      let extraSpins = 5 * 360;
+      let randomAngle = Math.floor(Math.random() * 360);
+      let finalAngle = currentRotation + extraSpins + randomAngle;
+      currentRotation = finalAngle;
+
+      wheel.style.transition = "transform 3s ease-out";
+      wheel.style.transform = `rotate(${finalAngle}deg)`;
+
+      setTimeout(() => {
+        let normalized = finalAngle % 360;
+
+        let resultValue;
+        for (let i of rotationvalue) {
+          if (normalized >= i.minDegree && normalized <= i.maxDegree) {
+            resultValue = options[i.value - 1];
+          }
+        }
+        final.innerHTML = `🎉 You got: ${resultValue}`;
+        spinBtn.disabled = false;
+      }, 3000);
+    }
+let spinBtn =  document.getElementById("spin-btn");
+  spinBtn.addEventListener("click", spinWheel);
+  </script>
+</html>

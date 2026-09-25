@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Arial", sans-serif;
+}
+
+body {
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 10px;
+}
+
+.login-container {
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 320px;
+  padding: 20px;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.login-header img {
+  height: 60px;
+  width: 60px;
+  margin-bottom: 10px;
+  box-shadow: none !important;
+}
+
+.login-header h2 {
+  color: #333;
+  font-size: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #555;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.form-control:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
+
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon i {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  color: #777;
+  font-size: 14px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 13px;
+}
+
+.remember-me input {
+  margin-right: 8px;
+}
+
+.btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #3a7bc8;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 15px;
+  color: #777;
+  font-size: 13px;
+}
+
+.login-footer a {
+  color: #4a90e2;
+  text-decoration: none;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}
+
+.message {
+  text-align: center;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.success {
+  color: green;
+}
+
+.error {
+  color: red;
+}
+#feedbackForm {
+  background: #f4faff;
+  border: 1px solid #cce5ff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.1);
+}
+
+#feedbackForm label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+#feedbackForm textarea {
+  border: 1px solid #b3d7ff;
+  border-radius: 4px;
+  background: #ffffff;
+  transition: border 0.3s ease;
+}
+
+#feedbackForm textarea:focus {
+  border-color: #3399ff;
+  outline: none;
+}
+
+.stars {
+  display: inline-block;
+  direction: ltr;
+}
+
+.stars span {
+  font-size: 2rem;
+  color: #ccc;
+  transition: color 0.2s;
+}
+
+.stars span:hover,
+.stars span:hover ~ span {
+  color: #ffd966;
+}
+
+.stars span.selected,
+.stars span.selected ~ span {
+  color: gold;
+}
+
+/* Submit Button */
+#feedbackForm button[type="submit"] {
+  background: #007acc;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#feedbackForm button[type="submit"]:hover {
+  background: #005c99;
+}
+
+.feedback-item {
+  background: #eaf4ff;
+  border-left: 4px solid #007acc;
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.feedback-item .rating-display {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+  color: gold;
+}
+
+</style>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+           
+            <img src="images/logo.jpg" alt="Logo">
+            <h2>Sign In</h2>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <input type="hidden" name="action" value="login">
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <div class="input-with-icon">
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-with-icon">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+                    <i class="fas fa-lock"></i>
+                </div>
+            </div>
+            
+                <form id="loginForm" onsubmit="handleLogin(event)">
+      <label for="feedbackText">Your Feedback:</label><br>
+      <textarea id="feedbackText" required></textarea><br><br>
+
+      <label>Rating:</label><br>
+      <div class="stars" id="ratingStars">
+        <span data-value="1">&#9733;</span>
+        <span data-value="2">&#9733;</span>
+        <span data-value="3">&#9733;</span>
+        <span data-value="4">&#9733;</span>
+        <span data-value="5">&#9733;</span>
+      </div><br>
+            <button type="submit" class="btn">submit</button>
+        </form>
+        
+    </div>
+</body>
+<script src="validation.js"></script>
+</html>
+

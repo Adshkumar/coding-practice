@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="bill.css" />
+  </head>
+  <body>
+    <div id="loginPanel">
+      <img src="1000025271.jpg" alt="">
+      <div id="loginBox">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username" />
+        <input type="password" id="password" placeholder="Password" />
+        <button onclick="login()">Login</button>
+        <div id="errorMsg"></div>
+      </div>
+    </div>
+  <div id="billingSystem">
+    <header>HOTEL ADARSH SARAVANA BHAVAN</header>
+  
+    <div class="container">
+      <div class="row">
+       <div>
+        <label for="">Bill No</label>
+        <input type="text" id="billNo" placeholder="SSB-1">
+        <br>
+        <label for="">Name</label>
+        <input type="text" id="custName" placeholder="Adarsh Kumar">
+        <br>
+        <label for="">Address</label>
+        <input type="text" id="custAddress" placeholder="Enter Your Address">
+        <br>
+       </div>
+       <div>
+        <label >Select Table</label>
+        <select id="tableNo">
+            <option value="window">Window Table</option>
+            <option value="family">Family Table (4-6 People)</option>
+            <option value="outdoor">Outdoor Table</option>
+            <option value="couple">Couple Table (2 People)</option>
+            <option value="vip">VIP Table</option>
+            <option value="bar">Bar Counter Table</option>
+            <option value="booth">Booth Seating</option>
+            <option value="private">Private Dining Room</option>
+        </select>
+        <br>
+        <label for="">Select waiter</label>
+        <select name="" id="waiter">
+            <option value="w1">Bharat(Captain Waiter)</option>
+            <option value="w2">Harsh-1(Senior Waiter)</option>
+            <option value="w3">Harsh-2(Junior Waiter)</option>
+            <option value="w4">Abhinav(Trainee Waiter)</option>
+            <option value="w5">Aman Busboy(Helper)</option>
+            <option value="w6">Anjali Mehta</option>
+            <option value="w7">Karan Yadav</option>
+            <option value="w8">Neha Patel</option>
+        </select>
+       <br>
+          <label>Date</label>
+          <input type="date" id="billDate">
+        </div>
+      </div>
+      <h3>Items</h3>
+      <div class="row">
+        <input type="text" id="itemCode" placeholder="item Code">
+        <input type="text" id="itemName" placeholder="item Name">
+        <input type="number" id="itemQty" placeholder="Qty"min="0" value="0">
+        <input type="number" id="itemPrice"placeholder="price">
+        <button onclick="addItem()" >+</button>
+      </div>
+      <table id="billTable">
+        <thead>
+          <tr>
+            <th>Item Code</th>
+            <th>Item Name</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Amount</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="totals">
+        <div>Sub Total: ₹<span id="subtotal">0</span></div>
+        <div>Net Total: ₹<span id="nettotal">0</span></div>
+        <div>Tax(5%): ₹<span id="tax">0</span></div>
+        <div>Balance: ₹<span id="balance">0</span></div>
+
+        <div>Paid Amount: <input type="number" id="paid" placeholder="0" onchange="updateBalance()"></div>
+       
+      </div>
+       <div class="buttons">
+        <button class="btn-save">Save</button>
+        <button class="btn-new" onclick="newBill()">New</button>
+        <button class="btn-reprint">RePrint</button>
+        <button class="btn-cancel">Cancel</button>
+      </div>
+  </body>
+  <script src="bill.js"></script>
+</html>

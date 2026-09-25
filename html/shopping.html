@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping Cart</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+      }
+      button {
+        padding: 10px 20px;
+        margin: 5px;
+        font-size: 16px;
+      }
+      #count {
+        font-size: 20px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🛒 Shopping Cart</h1>
+    <p>Stock Limit: 5 items</p>
+
+    <button onclick="additem()">Add Item</button>
+    <button onclick="removeitm()">Remove Item</button>
+
+    <p>Items in Cart: <span id="count">0</span></p>
+  </body>
+  <script>
+    let quantity = 0;
+    let = stock_limit = 5;
+    const countli = document.querySelector("#count");
+    function additem(){
+      if (quantity < stock_limit) {
+        quantity++;
+        countli.textContent = quantity;
+      } else {
+        alert("❌ Out of Stock");
+      }
+    }
+      function removeitm() {
+        if (quantity > 0) {
+          quantity--;
+          countli.textContent = quantity;
+        } else {
+          alert("Cart is empty!");
+        }
+      }
+    
+  </script>
+</html>

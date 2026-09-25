@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TaskHive — Micro collaboration hub (Single Page)</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0f172a;
+      --accent:#facc15;
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --card:#0b1220;
+      --glass: rgba(255,255,255,0.03);
+      --radius:12px;
+      --max-width:1100px;
+      --shadow: 0 6px 18px rgba(2,6,23,0.6);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"Poppins",sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.4;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+    .container{max-width:var(--max-width);margin:0 auto;padding:20px}
+    .header-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+    .site-header{
+      border-bottom:1px solid rgba(255,255,255,0.03);
+      background:linear-gradient(180deg, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
+      backdrop-filter: blur(6px);
+      position:sticky; top:0; z-index:50;
+    }
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}
+    .logo-w{width:44px;height:44px;display:flex;align-items:center;justify-content:center}
+    .brand-text{font-weight:700;font-size:1.05rem}
+    .nav a{margin-left:12px;color:var(--muted);text-decoration:none;padding:8px;border-radius:8px}
+    .nav a.active, .nav a:hover{color:var(--text);background:var(--glass)}
+    main{flex:1}
+    /* Hero */
+    .hero{padding:36px 0}
+    .hero-grid{display:grid;grid-template-columns:1fr 340px;gap:22px;align-items:center}
+    h1{font-size:2rem;margin:0 0 8px}
+    .lead{color:var(--muted);margin-bottom:16px}
+    .hero-cta .btn{margin-right:10px}
+
+    /* Buttons */
+    .btn{
+      display:inline-block;padding:10px 14px;border-radius:10px;background:var(--accent);color:#071028;text-decoration:none;font-weight:600;border:none;cursor:pointer;
+      box-shadow: 0 6px 12px rgba(250,204,21,0.12);
+    }
+    .btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)}
+    .btn-small{padding:6px 10px;font-size:0.9rem;border-radius:8px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:16px;border-radius:12px;box-shadow:var(--shadow);}
+
+    /* features */
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:20px 0}
+    .feature h4{margin:0 0 6px;color:var(--text)}
+
+    /* Page layout */
+    .page{padding:28px 0}
+    .tasks-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .task-controls{display:flex;gap:10px;align-items:center}
+    input[type="text"], input[type="number"], textarea, select{
+      background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);padding:10px;border-radius:10px;outline:none;
+    }
+    textarea{min-height:120px;resize:vertical}
+    .tasks-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:18px}
+
+    .task-card{padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03)}
+    .task-card h3{margin:0 0 6px;font-size:1.05rem}
+    .meta{color:var(--muted);font-size:0.9rem;margin-bottom:8px}
+    .card-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px}
+    .pill{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:999px;font-size:0.85rem}
+
+    .mt-24{margin-top:24px}
+    .form-card label{display:block;margin-bottom:12px;font-size:0.95rem}
+    .form-row{display:flex;gap:10px;align-items:center}
+    .form-error{color:#ff7b7b;margin-top:8px}
+
+    /* modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:80;padding:20px}
+    .modal.open{display:flex}
+    .modal-content{background:var(--card);border-radius:12px;padding:18px;max-width:720px;width:100%;box-shadow:var(--shadow);position:relative}
+    .modal-close{position:absolute;right:10px;top:8px;background:transparent;border:none;color:var(--muted);font-size:24px;cursor:pointer}
+
+    /* profile */
+    .empty{color:var(--muted);padding:18px;text-align:center;border-radius:10px;background:rgba(255,255,255,0.02)}
+
+    /* small screens */
+    @media (max-width:880px){
+      .hero-grid{grid-template-columns:1fr;gap:14px}
+      .features{grid-template-columns:1fr}
+      .nav a{padding:6px}
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="#" data-nav="home">
+        <span class="logo-w" aria-hidden="true">
+          <!-- inline SVG logo -->
+          <svg width="44" height="44" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TaskHive logo">
+            <defs>
+              <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0" stop-color="#facc15"/>
+                <stop offset="1" stop-color="#f9a825"/>
+              </linearGradient>
+            </defs>
+            <rect width="64" height="64" rx="12" fill="#071028"/>
+            <g transform="translate(7,7)">
+              <polygon points="18,0 30,9 30,27 18,36 6,27 6,9" fill="url(#g)"/>
+              <path d="M18 12L12 18" stroke="#071028" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M18 12L24 18" stroke="#071028" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+          </svg>
+        </span>
+        <span class="brand-text">TaskHive</span>
+      </a>
+
+      <nav class="nav" role="navigation" aria-label="Main">
+        <a href="#" data-nav="tasks" class="nav-link">Tasks</a>
+        <a href="#" data-nav="post" class="nav-link">Post Task</a>
+        <a href="#" data-nav="profile" class="nav-link">Profile</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+
+      <!-- HOME -->
+      <section id="home" class="page-section">
+        <div class="hero">
+          <div class="hero-grid">
+            <div>
+              <h1>TaskHive — tiny tasks, mighty teams</h1>
+              <p class="lead">Post small tasks, claim ones you can help with, and collaborate — simulated locally with localStorage so you can extend it later.</p>
+              <div class="hero-cta">
+                <a class="btn" href="#" data-nav="tasks">Browse Tasks</a>
+                <a class="btn btn-outline" href="#" data-nav="post">Post a Task</a>
+              </div>
+            </div>
+            <div class="hero-card card">
+              <h3 style="margin-top:0">Why TaskHive?</h3>
+              <ul style="margin:8px 0 0;padding-left:18px;color:var(--muted)">
+                <li>Quick micro-tasks that get done by collaborators</li>
+                <li>Claim, complete, and track progress</li>
+                <li>Designed for you to convert into a full-stack app later</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="features">
+          <div class="card feature">
+            <h4>Post & Discover</h4>
+            <p style="color:var(--muted)">Create tasks in seconds and browse by category or reward.</p>
+          </div>
+          <div class="card feature">
+            <h4>Claim & Collaborate</h4>
+            <p style="color:var(--muted)">Claim available tasks and mark them done when complete.</p>
+          </div>
+          <div class="card feature">
+            <h4>Persistent Locally</h4>
+            <p style="color:var(--muted)">All data is saved to your browser using localStorage.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TASKS -->
+      <section id="tasks" class="page-section" style="display:none">
+        <div class="tasks-top">
+          <h2>Browse Tasks</h2>
+          <div class="task-controls">
+            <input id="searchInput" type="text" placeholder="Search tasks or category..." style="min-width:180px">
+            <select id="filterStatus" title="Filter status">
+              <option value="all">All</option>
+              <option value="open">Open</option>
+              <option value="claimed">Claimed</option>
+              <option value="completed">Completed</option>
+            </select>
+            <select id="sortBy" title="Sort by">
+              <option value="newest">Newest</option>
+              <option value="reward">Highest reward</option>
+            </select>
+          </div>
+        </div>
+
+        <section id="tasksGrid" class="tasks-grid" aria-live="polite"></section>
+      </section>
+
+      <!-- POST -->
+      <section id="post" class="page-section" style="display:none">
+        <h2>Post a Task</h2>
+        <form id="postForm" class="card form-card" novalidate>
+          <label>Title
+            <input id="title" type="text" placeholder="Short title for the task" required>
+          </label>
+
+          <label>Description
+            <textarea id="description" placeholder="Describe what needs to be done (details, steps, expectations)" required></textarea>
+          </label>
+
+          <label>Category
+            <input id="category" type="text" placeholder="e.g., Design, Bugfix, Content" required>
+          </label>
+
+          <label>Reward (optional)
+            <input id="reward" type="number" min="0" placeholder="e.g., 10">
+          </label>
+
+          <div class="form-row" style="margin-top:6px">
+            <button type="submit" class="btn">Post Task</button>
+            <button type="button" class="btn btn-outline" data-nav="tasks">Cancel</button>
+          </div>
+
+          <div id="formError" class="form-error" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <!-- PROFILE -->
+      <section id="profile" class="page-section" style="display:none">
+        <h2>Your Tasks</h2>
+
+        <h3 class="mt-24">Claimed</h3>
+        <div id="claimedGrid" class="tasks-grid"></div>
+
+        <h3 class="mt-24">Completed</h3>
+        <div id="completedGrid" class="tasks-grid"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer style="padding:18px 0;border-top:1px solid rgba(255,255,255,0.02)">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <small style="color:var(--muted)">© <span id="year"></span> TaskHive — Built with HTML, CSS & JS</small>
+      <small style="color:var(--muted)">Local demo • Data stored in your browser</small>
+    </div>
+  </footer>
+
+  <!-- Modal -->
+  <div id="taskModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-content card" role="document">
+      <button id="modalClose" class="modal-close" aria-label="Close">&times;</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const STORAGE_KEY = 'taskhive_tasks_v1';
+      const USER_ID = 'me_demo_user'; // simple simulation
+
+      function uid(prefix='t'){
+        return prefix + '_' + Math.random().toString(36).slice(2,9);
+      }
+
+      function seedIfEmpty(){
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw){
+          const now = Date.now();
+          const sample = [
+            { id: uid(), title: "Fix mobile navbar overflow", description: "Navbar overlaps content on small screens. Adjust CSS, test on 320px width.", category: "Frontend", reward: 10, status: "open", createdAt: now-1000*60*60*24*2, claimedBy: null, completedAt: null },
+            { id: uid(), title: "Write README for Weather App", description: "Create a clear README with setup steps and screenshots.", category: "Docs", reward: 5, status: "open", createdAt: now-1000*60*60*24*5, claimedBy: null, completedAt: null },
+            { id: uid(), title: "Design 3 hero icons", description: "Create 3 SVG icons for hero section (performance, security, ux).", category: "Design", reward: 15, status: "open", createdAt: now-1000*60*60*24*1, claimedBy: null, completedAt: null }
+          ];
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(sample));
+        }
+      }
+
+      function loadTasks(){
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        } catch(e){
+          return [];
+        }
+      }
+      function saveTasks(arr){
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+      }
+
+      const navLinks = document.querySelectorAll('.nav-link, [data-nav]');
+      const sections = { home: document.getElementById('home'), tasks: document.getElementById('tasks'), post: document.getElementById('post'), profile: document.getElementById('profile') };
+      const tasksGrid = document.getElementById('tasksGrid');
+      const claimedGrid = document.getElementById('claimedGrid');
+      const completedGrid = document.getElementById('completedGrid');
+      const searchInput = document.getElementById('searchInput');
+      const filterStatus = document.getElementById('filterStatus');
+      const sortBy = document.getElementById('sortBy');
+
+      const modal = document.getElementById('taskModal');
+      const modalBody = document.getElementById('modalBody');
+      const modalClose = document.getElementById('modalClose');
+
+      function showSection(name){
+        Object.keys(sections).forEach(k=>{
+          sections[k].style.display = (k === name) ? '' : 'none';
+        });
+        navLinks.forEach(a=>{
+          if(a.dataset && a.dataset.nav === name) a.classList.add('active'); else a.classList.remove('active');
+          if(a.getAttribute('data-nav') === name) a.classList.add('active'); // for header brand links
+        });
+        if(name === 'tasks') renderTasks();
+        if(name === 'profile') renderProfile();
+        if(name === 'post') { document.getElementById('formError').innerText = ''; }
+        window.scrollTo({top:0,behavior:'smooth'});
+      }
+
+      document.querySelectorAll('[data-nav]').forEach(el=>{
+        el.addEventListener('click', e=>{
+          e.preventDefault();
+          showSection(el.getAttribute('data-nav'));
+        });
+      });
+
+      function renderTasks(opts = {}){
+        const q = (opts.q !== undefined ? opts.q : searchInput.value.trim()).toLowerCase();
+        const status = opts.status || filterStatus.value;
+        const sort = opts.sort || sortBy.value;
+
+        let tasks = loadTasks();
+        tasks = tasks.filter(t=>{
+          if(status === 'open' && t.status !== 'open') return false;
+          if(status === 'claimed' && t.status !== 'claimed') return false;
+          if(status === 'completed' && t.status !== 'completed') return false;
+          if(!q) return true;
+          return (t.title.toLowerCase().includes(q) || (t.category && t.category.toLowerCase().includes(q)) || (t.description && t.description.toLowerCase().includes(q)));
+        });
+
+        // sort
+        if(sort === 'reward'){
+          tasks.sort((a,b)=> (b.reward||0) - (a.reward||0));
+        } else { // newest
+          tasks.sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
+        }
+
+        // render
+        tasksGrid.innerHTML = tasks.length ? tasks.map(renderTaskCard).join('') : `<div class="empty card">No tasks found. Try posting one!</div>`;
+        tasks.forEach(t=>{
+          const viewBtn = document.querySelector(`[data-view="${t.id}"]`);
+          if(viewBtn) viewBtn.addEventListener('click', ()=> openModal(t.id));
+          const claimBtn = document.querySelector(`[data-claim="${t.id}"]`);
+          if(claimBtn) claimBtn.addEventListener('click', ()=> claimTask(t.id));
+        });
+      }
+
+      function renderTaskCard(t){
+        const reward = (t.reward !== undefined && t.reward !== null && t.reward !== '') ? `<strong>₹${t.reward}</strong>` : `<span style="color:var(--muted)">—</span>`;
+        const statusBadge = t.status === 'open' ? `<span class="pill">Open</span>` : (t.status === 'claimed' ? `<span class="pill">Claimed</span>` : `<span class="pill">Completed</span>`);
+        const desc = t.description.length > 120 ? t.description.slice(0,120) + '…' : t.description;
+        return `
+          <article class="task-card card" id="card_${t.id}">
+            <h3>${escapeHtml(t.title)}</h3>
+            <div class="meta">${escapeHtml(t.category || 'General')} • ${new Date(t.createdAt).toLocaleDateString()}</div>
+            <p style="color:var(--muted);margin:0">${escapeHtml(desc)}</p>
+            <div class="card-row">
+              <div style="display:flex;gap:8px;align-items:center">
+                ${statusBadge}
+                <div class="pill">${reward}</div>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button class="btn-small btn-outline" data-view="${t.id}">View</button>
+                ${t.status === 'open' ? `<button class="btn-small btn" data-claim="${t.id}">Claim</button>` : ''}
+              </div>
+            </div>
+          </article>
+        `;
+      }
+
+      // Modal
+      function openModal(taskId){
+        const tasks = loadTasks();
+        const t = tasks.find(x=>x.id === taskId);
+        if(!t) return;
+        modalBody.innerHTML = `
+          <h2 style="margin-top:0">${escapeHtml(t.title)}</h2>
+          <div class="meta">${escapeHtml(t.category || 'General')} • ${new Date(t.createdAt).toLocaleString()}</div>
+          <p style="color:var(--muted)">${escapeHtml(t.description)}</p>
+          <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
+            <div class="pill">Status: ${t.status}</div>
+            <div class="pill">Reward: ${t.reward ? '₹'+t.reward : '—'}</div>
+          </div>
+          <div style="margin-top:14px;display:flex;gap:8px">
+            ${t.status === 'open' ? `<button id="modalClaim" class="btn">Claim this task</button>` : ''}
+            ${t.status === 'claimed' && t.claimedBy === USER_ID ? `<button id="modalComplete" class="btn">Mark complete</button>` : ''}
+            <button id="modalCloseBtn" class="btn btn-outline">Close</button>
+          </div>
+        `;
+        // listeners
+        const mc = document.getElementById('modalClaim');
+        if(mc) mc.addEventListener('click', ()=>{ claimTask(taskId); closeModal(); });
+        const mco = document.getElementById('modalComplete');
+        if(mco) mco.addEventListener('click', ()=>{ completeTask(taskId); closeModal(); });
+        const mcb = document.getElementById('modalCloseBtn');
+        if(mcb) mcb.addEventListener('click', closeModal);
+
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden','false');
+      }
+      function closeModal(){
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden','true');
+      }
+      modalClose.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+
+      // Claim task
+      function claimTask(taskId){
+        const tasks = loadTasks();
+        const t = tasks.find(x=>x.id === taskId);
+        if(!t) return;
+        if(t.status !== 'open') return alert('Task is not open');
+        t.status = 'claimed';
+        t.claimedBy = USER_ID;
+        saveTasks(tasks);
+        renderTasks();
+        flashMessage('Task claimed — check your profile', 2200);
+      }
+
+      // Complete task
+      function completeTask(taskId){
+        const tasks = loadTasks();
+        const t = tasks.find(x=>x.id === taskId);
+        if(!t) return;
+        if(t.status !== 'claimed' || t.claimedBy !== USER_ID) return alert('You can only complete tasks you claimed');
+        t.status = 'completed';
+        t.completedAt = Date.now();
+        saveTasks(tasks);
+        renderTasks();
+        renderProfile();
+        flashMessage('Nice! Task marked complete', 2200);
+      }
+
+      // Unclaim or remove (for profile actions)
+      function unclaimTask(taskId){
+        const tasks = loadTasks();
+        const t = tasks.find(x=>x.id === taskId);
+        if(!t) return;
+        if(t.status !== 'claimed' || t.claimedBy !== USER_ID) return;
+        t.status = 'open';
+        t.claimedBy = null;
+        saveTasks(tasks);
+        renderTasks();
+        renderProfile();
+      }
+
+      // Post form
+      const postForm = document.getElementById('postForm');
+      postForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        const title = document.getElementById('title').value.trim();
+        const description = document.getElementById('description').value.trim();
+        const category = document.getElementById('category').value.trim();
+        const rewardRaw = document.getElementById('reward').value;
+        const reward = rewardRaw === '' ? null : Number(rewardRaw);
+
+        const err = document.getElementById('formError');
+        err.innerText = '';
+        if(!title || !description || !category){
+          err.innerText = 'Please fill title, description and category.';
+          return;
+        }
+        const tasks = loadTasks();
+        const t = { id: uid(), title, description, category, reward, status: 'open', createdAt: Date.now(), claimedBy: null, completedAt: null };
+        tasks.push(t);
+        saveTasks(tasks);
+        // reset
+        postForm.reset();
+        showSection('tasks');
+        renderTasks({ q:'', status:'all', sort:'newest' });
+        flashMessage('Task posted successfully', 2000);
+      });
+
+      // Profile render
+      function renderProfile(){
+        const tasks = loadTasks();
+        const claimed = tasks.filter(t=>t.status === 'claimed' && t.claimedBy === USER_ID);
+        const completed = tasks.filter(t=>t.status === 'completed' && t.claimedBy === USER_ID);
+
+        claimedGrid.innerHTML = claimed.length ? claimed.map(t=>profileCard(t)).join('') : `<div class="empty card">You have no claimed tasks. Claim some from the Tasks page.</div>`;
+        completedGrid.innerHTML = completed.length ? completed.map(t=>profileCard(t,true)).join('') : `<div class="empty card">No completed tasks yet.</div>`;
+
+        // attach listeners
+        claimed.forEach(t=>{
+          const uc = document.querySelector(`[data-unclaim="${t.id}"]`);
+          if(uc) uc.addEventListener('click', ()=>{ unclaimTask(t.id); flashMessage('Task unclaimed', 1400); });
+          const comp = document.querySelector(`[data-complete="${t.id}"]`);
+          if(comp) comp.addEventListener('click', ()=>{ completeTask(t.id); });
+        });
+      }
+
+      function profileCard(t, completed=false){
+        const reward = (t.reward !== undefined && t.reward !== null && t.reward !== '') ? `₹${t.reward}` : `—`;
+        const btns = completed ? `<button class="btn-small btn-outline" data-view="${t.id}">View</button>` : `<button class="btn-small btn" data-complete="${t.id}">Mark complete</button><button class="btn-small btn-outline" data-unclaim="${t.id}">Unclaim</button><button class="btn-small btn-outline" data-view="${t.id}">View</button>`;
+        return `
+          <article class="task-card card" id="prof_${t.id}">
+            <h3>${escapeHtml(t.title)}</h3>
+            <div class="meta">${escapeHtml(t.category)} • ${new Date(t.createdAt).toLocaleDateString()}</div>
+            <p style="color:var(--muted);margin:0">${escapeHtml(t.description.slice(0,140))}${t.description.length>140?'…':''}</p>
+            <div class="card-row" style="margin-top:10px">
+              <div class="pill">${reward}</div>
+              <div style="display:flex;gap:8px">${btns}</div>
+            </div>
+          </article>
+        `;
+      }
+      searchInput.addEventListener('input', ()=> renderTasks());
+      filterStatus.addEventListener('change', ()=> renderTasks());
+      sortBy.addEventListener('change', ()=> renderTasks());
+      function flashMessage(msg, ms=1800){
+        const el = document.createElement('div');
+        el.textContent = msg;
+        el.style.cssText = 'position:fixed;right:18px;bottom:18px;background:rgba(11,18,32,0.95);color:var(--text);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);z-index:120';
+        document.body.appendChild(el);
+        setTimeout(()=> el.style.opacity = '0.01', ms-400);
+        setTimeout(()=> el.remove(), ms);
+      }
+
+      function escapeHtml(str=''){
+        return String(str).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; });
+      }
+      function init(){
+        seedIfEmpty();
+        document.getElementById('year').innerText = new Date().getFullYear();
+        showSection('home');
+        renderTasks();
+
+        document.body.addEventListener('click', function(e){
+          const v = e.target.closest('[data-view]');
+          if(v){
+            const id = v.getAttribute('data-view');
+            openModal(id);
+          }
+        });
+      }
+
+      window.TaskHive = { renderTasks, renderProfile, openModal };
+
+      // Start app
+      init();
+    })();
+  </script>
+</body>
+</html>

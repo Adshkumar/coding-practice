@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini HR Portal & Feedback Collector</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #007acc;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    nav {
+      background: #004d80;
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    nav button {
+      margin: 0 0.5rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      background: #e6f2ff;
+      color: #004d80;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    nav button:hover {
+      background: #cce0ff;
+    }
+
+    section {
+      display: none;
+      padding: 2rem;
+      background: white;
+      margin: 1rem auto;
+      width: 90%;
+      max-width: 800px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    section.active {
+      display: block;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      resize: vertical;
+      font-size: 1rem;
+    }
+
+    .stars span {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #ccc;
+    }
+
+    .stars span.selected {
+      color: gold;
+    }
+
+    .feedback-item {
+      background: #f9f9f9;
+      border-left: 4px solid #007acc;
+      margin-top: 1rem;
+      padding: 1rem;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 0.9rem;
+      margin: 2rem 0;
+      color: #888;
+    }
+    
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Mini HR Portal</h1>
+  </header>
+
+  <nav>
+    <button onclick="showSection('home')">Home</button>
+    <button onclick="showSection('policy')">Leave Policy</button>
+    <button onclick="showSection('rules')">Company Rules</button>
+    <button onclick="showSection('holidays')">Holidays</button>
+    <button onclick="showSection('feedback')">Feedback</button>
+  </nav>
+
+  <section id="home" class="active">
+    <h2>Welcome to the HR Portal</h2>
+    <p>This portal provides essential HR information and collects employee feedback.</p>
+  </section>
+
+  <section id="policy">
+    <h2>Leave Policy</h2>
+    <p>Employees are entitled to 18 paid leaves annually, including casual, sick, and earned leaves. Leave applications must be submitted in advance and approved by the manager.</p>
+  </section>
+
+  <section id="rules">
+    <h2>Company Rules</h2>
+    <ul>
+      <li>Working hours: 9 AM to 6 PM</li>
+      <li>Dress code: Formal or smart casual</li>
+      <li>No unauthorized data sharing</li>
+      <li>Maintain a respectful and professional environment</li>
+    </ul>
+  </section>
+
+  <section id="holidays">
+    <h2>Holidays</h2>
+    <ul>
+      <li>January 26 - Republic Day</li>
+      <li>August 15 - Independence Day</li>
+      <li>October 2 - Gandhi Jayanti</li>
+      <li>December 25 - Christmas</li>
+    </ul>
+  </section>
+
+  <section id="feedback">
+    <h2>Employee Feedback</h2>
+    <p>Please share your thoughts or suggestions to help us improve.</p>
+
+    <form id="feedbackForm" onsubmit="submitFeedback(event)">
+      <label for="feedbackText">Your Feedback:</label><br>
+      <textarea id="feedbackText" required></textarea><br><br>
+
+      <label>Rating:</label><br>
+      <div class="stars" id="ratingStars">
+        <span data-value="1">&#9733;</span>
+        <span data-value="2">&#9733;</span>
+        <span data-value="3">&#9733;</span>
+        <span data-value="4">&#9733;</span>
+        <span data-value="5">&#9733;</span>
+      </div><br>
+
+      <button type="submit">Submit Feedback</button>
+    </form>
+
+    <h3>Submitted Feedback:</h3>
+    <div id="feedbackList"></div>
+  </section>
+
+  <div class="footer">© 2025 HR Department</div>
+<script src="mini.js"></script>
+</body>
+</html>

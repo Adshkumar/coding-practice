@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ATM Interface</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    body {
+  font-family: Arial, sans-serif;
+  background-color: #f1f1f1;
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+}
+
+.atm-container {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 350px;
+}
+
+h1 {
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+button {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#message {
+  margin-top: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+#history {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+</style>
+<body>
+  <div class="atm-container">
+    <h1>🏦 ATM Simulator</h1>
+
+    <input type="number" id="amount" placeholder="Enter amount" />
+
+    <div class="buttons">
+      <button id="checkBalance">Check Balance</button>
+      <button id="deposit">Deposit</button>
+      <button id="withdraw">Withdraw</button>
+    </div>
+
+    <div id="message"></div>
+
+    <h3>🧾 Transaction History</h3>
+    <ul id="history"></ul>
+  </div>
+
+  <script>
+    let balance = 10000;
+const amountInput = document.getElementById("amount");
+const message = document.getElementById("message");
+const history = document.getElementById("history");
+
+document.getElementById("checkBalance").addEventListener("click", () => {
+  showMessage(`💼 Current Balance: ₹${balance}`);
+});
+
+document.getElementById("deposit").addEventListener("click", () => {
+  const amount = parseFloat(amountInput.value);
+  if (amount > 0) {
+    balance += amount;
+    showMessage(`💰 ₹${amount} deposited. New balance: ₹${balance}`);
+    addToHistory(`+ ₹${amount} deposited.`);
+  } else {
+    showMessage("❌ Enter a valid amount to deposit.");
+  }
+});
+
+document.getElementById("withdraw").addEventListener("click", () => {
+  const amount = parseFloat(amountInput.value);
+  if (amount > 0 && amount <= balance) {
+    balance -= amount;
+    showMessage(`💸 ₹${amount} withdrawn. Remaining balance: ₹${balance}`);
+    addToHistory(`- ₹${amount} withdrawn.`);
+  } else if (amount > balance) {
+    showMessage("🚫 Insufficient balance.");
+  } else {
+    showMessage("❌ Enter a valid amount to withdraw.");
+  }
+});
+
+function showMessage(text) {
+  message.textContent = text;
+}
+
+function addToHistory(text) {
+  const li = document.createElement("li");
+  li.textContent = text;
+  history.prepend(li);
+}
+
+  </script>
+</body>
+</html>
