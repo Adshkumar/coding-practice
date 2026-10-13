@@ -1,31 +1,31 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    <h1>WebSocket Server </h1>
+  </head>
+  <body>
+    <h1>WebSocket Server</h1>
     <div>
-        <input type="text" placeholder="Enter your message" id="message-input">
-        <button id="messgae-send-btn">Send</button>
-        <ul id="message-container"></ul>
+      <input type="text" placeholder="Enter your message" id="message-input" />
+      <button id="messgae-send-btn">Send</button>
+      <ul id="message-container"></ul>
     </div>
     <script>
-        const messageInput = document.getElementById('message-input');
-        const messageSendbtn = document.getElementById('messgae-send-btn');
-        const messageContainer = document.getElementById('message-container');
+      const messageInput = document.getElementById('message-input');
+       const messageSendbtn = document.getElementById('messgae-send-btn');
+      const messageContainer = document.getElementById('message-container');
 
-        const {port} = window.location
-        const connection = new WebSocket(`ws://localhost:${port}`);
+      const {port} = window.location
+      const connection = new WebSocket(`ws://localhost:${port}`);
 
-        connection.onopen = () => {
-            messageSendbtn.addEventListener('click', (ev) =>{
-                const value = messageInput.value;
-                connection.send(JSON.stringify({ message: value }));
-            })
-        }
+      connection.onopen = () => {
+          messageSendbtn.addEventListener('click', (ev) =>{
+              const value = messageInput.value;
+              connection.send(JSON.stringify({ message: value }));
+          })
+      }
     </script>
-</body>
+  </body>
 </html>
